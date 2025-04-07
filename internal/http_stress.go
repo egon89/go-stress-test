@@ -13,7 +13,7 @@ type result struct {
 	duration   time.Duration
 }
 
-func HttpStress(url, method string, totalRequests, concurrentRequests, intervalSec int, body string) {
+func HttpStress(url, method string, totalRequests, concurrentRequests, intervalSec int, body string, headersMap map[string]string) {
 	fmt.Println("Starting stress test...")
 	fmt.Printf("URL: %s, Method: %s, Requests: %d, Concurrency: %d\n", url, method, totalRequests, concurrentRequests)
 	if body != "" {
@@ -63,9 +63,7 @@ func HttpStress(url, method string, totalRequests, concurrentRequests, intervalS
 				return
 			}
 
-			if body != "" {
-				req.Header.Set("Content-Type", "application/json")
-			}
+			setUpHeaders(req, headersMap)
 
 			resp, err := client.Do(req)
 			elapsed := time.Since(start)
@@ -124,6 +122,14 @@ func ValidateInputHttpStress(url, method string, totalRequests, concurrentReques
 	}
 
 	return nil
+}
+
+func setUpHeaders(req *http.Request, headersMap map[string]string) {
+	for key, value := range headersMap {
+		req.Header.Set(key, value)
+	}
+
+	req.Header.Set("User-Agent", "go-stress-test/1.0")
 }
 
 func report(totalRequests int, totalRequestDuration, totalDuration time.Duration, statusCodeCounter map[int]int) {

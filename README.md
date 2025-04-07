@@ -3,7 +3,7 @@
 A simple CLI tool for stress testing APIs, built using the [Cobra CLI](https://github.com/spf13/cobra) framework. This tool allows you to test the performance and reliability of your APIs by sending multiple HTTP requests concurrently and analyzing the results.
 
 ## Features
-- Specify the target URL, HTTP method, number of requests, concurrency level, and request body.
+- Specify the target URL, number of requests, concurrency level, HTTP method, custom headers and request body.
 - Measure response times and collect status code statistics.
 - Supports interval delays between requests for controlled testing.
 
@@ -13,13 +13,15 @@ The project is divided into two main components:
 2. **HTTP Stress Testing Logic**: The core logic for stress testing is implemented in the `internal/http_stress.go` file.
 
 ### Cobra CLI
-Cobra is a library for creating modern CLI applications in Go. It simplifies the process of defining commands, flags, and argument parsing. In this project, the `cmd/root.go` file defines the main command (`go-stress-test`) and its flags, such as:
+In this project, the `cmd/root.go` file defines the main command (`go-stress-test`) and its flags, such as:
 - `--url` (`-u`): The target URL for the stress test. **Required flag**.
-- `--method` (`-X`): The HTTP method (e.g., GET, HEAD, PATCH, POST, PUT). Default is GET.
 - `--requests` (`-r`): The total number of requests to send. Default is 10.
 - `--concurrency` (`-c`): The number of concurrent requests. Default is 2.
+- `--method` (`-X`): The HTTP method (e.g., GET, HEAD, PATCH, POST, PUT). Default is GET.
 - `--interval` (`-i`): The interval (in seconds) between requests. Default is 0.
 - `--body` (`-d`): The request body for requests.
+- `--headers` (`-H`): Custom headers for the request separated by commas. (`Authorization=Bearer token,Content-Type=application/json`)
+- `--help` (`-h`): Displays help information for the command.
 
 ### `http_stress.go`
 The `internal/http_stress.go` file contains the core logic for performing the stress test. Here's a breakdown of its functionality:
@@ -60,7 +62,7 @@ The `internal/http_stress.go` file contains the core logic for performing the st
 
     Post example:
     ```bash
-    docker run --rm go-http-stress:latest -u https://67f4273dcbef97f40d2d8a5b.mockapi.io/users -X POST -d "{\"name\": \"John Doe\"}"
+    docker run --rm go-http-stress:latest -u https://67f4273dcbef97f40d2d8a5b.mockapi.io/users -H "Content-Type=application/json" -X POST -d "{\"name\": \"John Doe\"}"
     ```
 
     For default values, you can run the command without specifying all flags:

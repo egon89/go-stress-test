@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/egon89/go-stress-test/internal"
 	"github.com/spf13/cobra"
@@ -15,6 +16,8 @@ var (
 	concurrency int
 	intervalSec int
 	body        string
+	headers     string
+	headersMap  map[string]string
 )
 
 var rootCmd = &cobra.Command{
@@ -30,7 +33,7 @@ This tool is useful for performance testing and benchmarking your APIs.`,
 			return
 		}
 
-		internal.HttpStress(url, method, requests, concurrency, intervalSec, body)
+		internal.HttpStress(url, method, requests, concurrency, intervalSec, body, headersMap)
 	},
 }
 
@@ -48,8 +51,25 @@ func init() {
 	rootCmd.PersistentFlags().IntVarP(&concurrency, "concurrency", "c", 2, "Number of concurrent requests")
 	rootCmd.PersistentFlags().IntVarP(&intervalSec, "interval", "i", 0, "Interval between requests in seconds")
 	rootCmd.PersistentFlags().StringVarP(&body, "body", "d", "", "Request body for requests")
+	rootCmd.PersistentFlags().StringVarP(&headers, "headers", "H", "", "Request headers in key:value format, separated by commas")
+	rootCmd.MarkPersistentFlagRequired("url")
 
 	rootCmd.RegisterFlagCompletionFunc("method", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"GET", "POST", "PUT", "DELETE"}, cobra.ShellCompDirectiveDefault
 	})
+
+	cobra.OnInitialize(parseHeaders)
+}
+
+func parseHeaders() {
+	headersMap = make(map[string]string)
+	if headers != "" {
+		pairs := strings.Split(headers, ",")
+		for _, pair := range pairs {
+			kv := strings.SplitN(pair, "=", 2)
+			if len(kv) == 2 {
+				headersMap[strings.TrimSpace(kv[0])] = strings.TrimSpace(kv[1])
+			}
+		}
+	}
 }
