@@ -13,9 +13,11 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o go-http-stress
 
 # Stage 2: production go image
-FROM scratch
-
+FROM alpine:latest
 WORKDIR /app
+
+# install ca-certificates (for https)
+RUN apk --no-cache add ca-certificates
 
 COPY --from=builder /app/go-http-stress .
 
