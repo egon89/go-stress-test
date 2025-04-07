@@ -45,9 +45,9 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "Target URL (required)")
 	rootCmd.PersistentFlags().StringVarP(&method, "method", "X", "GET", "HTTP method: GET, HEAD, PATCH, POST, PUT, DELETE")
 	rootCmd.PersistentFlags().IntVarP(&requests, "requests", "r", 10, "Number of requests")
-	rootCmd.PersistentFlags().IntVarP(&concurrency, "concurrency", "c", 1, "Number of concurrent requests")
+	rootCmd.PersistentFlags().IntVarP(&concurrency, "concurrency", "c", 2, "Number of concurrent requests")
 	rootCmd.PersistentFlags().IntVarP(&intervalSec, "interval", "i", 0, "Interval between requests in seconds")
-	rootCmd.PersistentFlags().StringVarP(&body, "body", "d", "", "Request body (for POST, PUT)")
+	rootCmd.PersistentFlags().StringVarP(&body, "body", "d", "", "Request body for requests")
 
 	rootCmd.RegisterFlagCompletionFunc("method", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"GET", "POST", "PUT", "DELETE"}, cobra.ShellCompDirectiveDefault
