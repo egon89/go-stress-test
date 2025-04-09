@@ -34,22 +34,6 @@ The `internal/http_stress.go` file contains the core logic for performing the st
 ### Prerequisites
 - Docker for build and run the project.
 
-### Build and Run - Makefile
-1. Build the project:
-   ```bash
-   make build
-    ```
-
-2. Run the CLI tool:
-   ```bash
-   make run URL=http://example.com REQUESTS=20 CONCURRENCY=5 HTTP_METHOD=GET
-   ```
-
-   For default values, you can run the command without specifying all parameters:
-   ```bash
-   make run URL=http://example.com
-   ```
-
 ### Build and Run - Docker
 1. Build the Docker image:
    ```bash
@@ -74,3 +58,21 @@ The `internal/http_stress.go` file contains the core logic for performing the st
     ```bash
     docker run --rm go-http-stress:latest --help
     ```
+
+### Build and Run - Makefile
+You can also use the Makefile to facilitate the build and run process.
+
+1. Build the project:
+   ```bash
+   make build
+    ```
+
+2. Run the CLI tool:
+   ```bash
+   make run URL=http://example.com REQUESTS=20 CONCURRENCY=5 HTTP_METHOD=GET
+   ```
+
+   For default values, you can run the command without specifying all parameters:
+   ```bash
+   make run URL=http://example.com
+   ```
